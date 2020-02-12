@@ -1,2 +1,4 @@
-# snippetbox
-Working through Alex Edwards Go Course
+## Snippetbox ##
+
+Working through Alex Edwards [Go Course](https://lets-go.alexedwards.net)
+
