@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
-
-
 
 func main() {
 
@@ -18,6 +17,10 @@ func main() {
 	//parse command line
 	flag.Parse()
 
+	//add logging
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/snippet", showSnippet)
@@ -26,16 +29,21 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./ui/static"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
+	infoLog.Printf("Starting Server on %s", *addr)
 
-	log.Printf("Starting server on %s", *addr)
+	fmt.Println("http://localhost" + *addr)
+	fmt.Println("http://localhost" + *addr + "/snippet?id=123")
+	fmt.Println("http://localhost" + *addr + "/snippet/create")
+	fmt.Println("http://localhost" + *addr + "/static/")
 
-	fmt.Println("http://localhost" + *addr )
-	fmt.Println("http://localhost:4000/snippet?id=123")
-	fmt.Println("http://localhost:4000/snippet/create")
-	fmt.Println("http://localhost:4000/static/")
+	//new http server struct to use error logging
+	srv := &http.Server{
+		Addr:     *addr,
+		ErrorLog: errorLog,
+		Handler:  mux,
+	}
 
-
-	err := http.ListenAndServe(*addr, mux)
-	log.Fatal(err)
+	err := srv.ListenAndServe()
+	errorLog.Fatal(err)
 
 }
