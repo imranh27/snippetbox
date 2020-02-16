@@ -2,8 +2,10 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
@@ -19,6 +21,8 @@ func main() {
 
 	//define command line flags, default = 4000
 	addr := flag.String("addr", ":4000", "HTTP network address")
+	//MySQL dsn connection string
+	dsn := flag.String("dsn", "web:password@/snippetbox?parseTime=true", "MySQL data source name")
 
 	//parse command line
 	flag.Parse()
@@ -38,6 +42,12 @@ func main() {
 		Handler:  app.routes(),
 	}
 
+	db, err := openDB(*dsn)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+	defer db.Close()
+
 	infoLog.Printf("Starting Server on %s", *addr)
 
 	fmt.Println("http://localhost" + *addr)
@@ -45,7 +55,18 @@ func main() {
 	fmt.Println("http://localhost" + *addr + "/snippet/create")
 	fmt.Println("http://localhost" + *addr + "/static/")
 
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	errorLog.Fatal(err)
 
+}
+
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+	return db, nil
 }
