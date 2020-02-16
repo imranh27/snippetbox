@@ -9,10 +9,10 @@ import (
 	"os"
 )
 
-//to make this globally available. Functions are then create as methods against this.
+//to make this globally available. Functions are then created as methods against this.
 type application struct {
 	errorLog *log.Logger
-	inforLog *log.Logger
+	infoLog  *log.Logger
 }
 
 func main() {
@@ -29,16 +29,14 @@ func main() {
 
 	app := &application{
 		errorLog: errorLog,
-		inforLog: infoLog,
+		infoLog:  infoLog,
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/snippet", app.showSnippet)
-	mux.HandleFunc("/snippet/create", app.createSnippet)
-
-	fileServer := http.FileServer(http.Dir("./ui/static"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+	srv := &http.Server{
+		Addr:     *addr,
+		ErrorLog: errorLog,
+		Handler:  app.routes(),
+	}
 
 	infoLog.Printf("Starting Server on %s", *addr)
 
@@ -46,13 +44,6 @@ func main() {
 	fmt.Println("http://localhost" + *addr + "/snippet?id=123")
 	fmt.Println("http://localhost" + *addr + "/snippet/create")
 	fmt.Println("http://localhost" + *addr + "/static/")
-
-	//new http server struct to use error logging
-	srv := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		Handler:  mux,
-	}
 
 	err := srv.ListenAndServe()
 	errorLog.Fatal(err)
