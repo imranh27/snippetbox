@@ -55,13 +55,12 @@ func main() {
 	infoLog.Printf("Starting Server on %s", *addr)
 
 	fmt.Println("http://localhost" + *addr)
-	fmt.Println("http://localhost" + *addr + "/snippet?id=123")
+	fmt.Println("http://localhost" + *addr + "/snippet?id=1")
 	fmt.Println("http://localhost" + *addr + "/snippet/create")
 	fmt.Println("http://localhost" + *addr + "/static/")
 
 	err = srv.ListenAndServe()
 	errorLog.Fatal(err)
-
 }
 
 func openDB(dsn string) (*sql.DB, error) {
