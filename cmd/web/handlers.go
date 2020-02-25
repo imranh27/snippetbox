@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/imranh27/snippetbox/pkg/models"
+	"html/template"
+
 	//"html/template"
 	"net/http"
 	"strconv"
@@ -60,8 +62,29 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	//Write snippet data as plain text HTTP reponse body
-	fmt.Fprintf(w, "%v", s)
+	//create instance of templateData struct to hold the snippet data.
+	data := &templateData{Snippet: s}
+
+	//Write snippet data as plain text HTTP response body
+	//fmt.Fprintf(w, "%v", s)
+	//Initialise a slice containing the paths to the template files.
+	files := []string{
+		"./ui/html/show.page.tmpl",
+		"./ui/html/base.layout.tmpl",
+		"./ui/html/footer.partial.tmpl",
+	}
+	//parse the template files
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	//and then execute them, passing in the template data
+	err = ts.Execute(w, data)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
