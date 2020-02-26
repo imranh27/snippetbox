@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"github.com/imranh27/snippetbox/pkg/models"
 	"html/template"
-
-	//"html/template"
 	"net/http"
 	"strconv"
 )
@@ -21,27 +19,33 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	s, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
 
-	for _, snippet := range s {
-		fmt.Fprintf(w, "%v\n", snippet)
+	//Create an instance of the tenplateData struct holding the slices of snippets.
+	data := &templateData{Snippets:s}
+
+
+	//for _, snippet := range s {
+	//	fmt.Fprintf(w, "%v\n", snippet)
+	//}
+
+	files := []string{
+		"./ui/html/home.page.tmpl",
+		"./ui/html/base.layout.tmpl",
+		"./ui/html/footer.partial.tmpl",
 	}
 
-	//files := []string{
-	//	"./ui/html/home.page.tmpl",
-	//	"./ui/html/base.layout.tmpl",
-	//	"./ui/html/footer.partial.tmpl",
-	//}
-
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, err)
-	//	return
-	//}
-	//err = ts.Execute(w, nil)
-	//if err != nil {
-	//	app.serverError(w, err)
-	//}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	//Pass the templateData struct when executing the template.
+	err = ts.Execute(w, data)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }
 
 func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
