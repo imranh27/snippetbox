@@ -12,6 +12,7 @@ type templateData struct {
 	Snippets []*models.Snippet
 }
 
+//Build a template cache
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
 
 	//Initialise a new map to act as the cache

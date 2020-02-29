@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/imranh27/snippetbox/pkg/models"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -23,7 +22,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Use the new render helper
-	app.render(w, r, "home.page.tmpl", &templateData{Snippets:s})
+	app.render(w, r, "home.page.tmpl", &templateData{Snippets: s,})
 }
 
 func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +45,7 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//use the render helper
-	app.render(w, r, "show.page.tmpl", &templateData{Snippet:s})
+	app.render(w, r, "show.page.tmpl", &templateData{Snippet: s,})
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {

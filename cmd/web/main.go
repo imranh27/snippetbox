@@ -15,9 +15,9 @@ import (
 
 //to make this globally available. Functions are then created as methods against this.
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	snippets *mysql.SnippetModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	snippets      *mysql.SnippetModel
 	templateCache map[string]*template.Template
 }
 
@@ -43,16 +43,16 @@ func main() {
 	defer db.Close()
 
 	//initialise new template cache 216
-	templateCache, err := newTemplateCache(".ui/html/")
+	templateCache, err := newTemplateCache("./ui/html/")
 	if err != nil {
 		errorLog.Fatal(err)
 	}
 
 	app := &application{
-		errorLog: 		errorLog,
-		infoLog:  		infoLog,
-		snippets: 		&mysql.SnippetModel{DB: db},
-		templateCache:	templateCache,
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		snippets:      &mysql.SnippetModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	srv := &http.Server{
