@@ -8,6 +8,7 @@ import (
 
 //define a templateData type to act as the holding structure for any holding data to pass to our HTML templates.
 type templateData struct {
+	CurrentYear int
 	Snippet  *models.Snippet
 	Snippets []*models.Snippet
 }
