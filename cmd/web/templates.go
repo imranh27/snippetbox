@@ -19,7 +19,7 @@ func humanDate(t time.Time) string {
 	return t.Format("02 Jan 2006 @ 15:04")
 }
 
-//Imnitialise a template.FuncMap object and store in a global variable.
+//Initialise a template.FuncMap object and store in a global variable.
 var functions = template.FuncMap{
 	"humanDate": humanDate,
 }

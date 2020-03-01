@@ -14,5 +14,5 @@ func (app *application) routes() http.Handler {
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
 	//Using Middleware
-	return secureHeaders(mux)
+	return app.logRequest(secureHeaders(mux))
 }
