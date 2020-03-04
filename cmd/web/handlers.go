@@ -48,10 +48,17 @@ func(app *application) createSnippetForm(w http.ResponseWriter, r *http.Request)
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 
-	//Creates some variables holding dummy data.
-	title := "O snail"
-	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n- Kobayashi Issa"
-	expires := "7"
+	//Use r.ParseForm to add data in POST request body, trapping any errors.
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	//Use GET method to retrieve data fields.
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+	expires := r.PostForm.Get("expires")
 
 	//pass the record to the snippet model.
 	id, err := app.snippets.Insert(title, content, expires)
@@ -61,8 +68,6 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 
 	//redirect user to relevant page for the snippet.
 	http.Redirect(w, r, fmt.Sprintf("/snippet/%d", id), http.StatusSeeOther)
-
-	w.Write([]byte("Create a new snippet...."))
 }
 
 
