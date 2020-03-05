@@ -6,17 +6,20 @@ import (
 	"flag"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/golangcollege/sessions"
 	"github.com/imranh27/snippetbox/pkg/models/mysql"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 //to make this globally available. Functions are then created as methods against this.
 type application struct {
 	errorLog      *log.Logger
 	infoLog       *log.Logger
+	session       *sessions.Session
 	snippets      *mysql.SnippetModel
 	templateCache map[string]*template.Template
 }
@@ -27,6 +30,9 @@ func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	//MySQL dsn connection string
 	dsn := flag.String("dsn", "web:password@/snippetbox?parseTime=true", "MySQL data source name")
+
+	//Define session secret
+	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzb-pa@ge", "Secret key")
 
 	//parse command line
 	flag.Parse()
@@ -42,6 +48,10 @@ func main() {
 	}
 	defer db.Close()
 
+	//Initialise new session manager, session expires after 12 hours
+	session := sessions.New([]byte(*secret))
+	session.Lifetime = 12 * time.Hour
+
 	//initialise new template cache 216
 	templateCache, err := newTemplateCache("./ui/html/")
 	if err != nil {
@@ -51,6 +61,7 @@ func main() {
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
+		session:       session,
 		snippets:      &mysql.SnippetModel{DB: db},
 		templateCache: templateCache,
 	}
