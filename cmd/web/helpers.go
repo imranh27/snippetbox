@@ -13,6 +13,10 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 		td = &templateData{}
 	}
 	td.CurrentYear = time.Now().Year()
+
+	//Add flash message if one exists.
+	td.Flash = app.session.PopString(r, "flash")
+
 	return td
 }
 
@@ -51,9 +55,3 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	//write the buffer to the response writer
 	buf.WriteTo(w)
 }
-
-
-
-
-
-

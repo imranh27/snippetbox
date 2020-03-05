@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/imranh27/snippetbox/pkg/models"
 	"github.com/imranh27/snippetbox/pkg/forms"
+	"github.com/imranh27/snippetbox/pkg/models"
 	"html/template"
 	"path/filepath"
 	"time"
@@ -11,9 +11,10 @@ import (
 //define a templateData type to act as the holding structure for any holding data to pass to our HTML templates.
 type templateData struct {
 	CurrentYear int
-	Form 		*forms.Form
-	Snippet  	*models.Snippet
-	Snippets 	[]*models.Snippet
+	Flash       string
+	Form        *forms.Form
+	Snippet     *models.Snippet
+	Snippets    []*models.Snippet
 }
 
 //Create humanDate function
