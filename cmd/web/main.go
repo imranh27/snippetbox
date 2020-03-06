@@ -2,6 +2,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"flag"
 	"fmt"
@@ -66,10 +67,18 @@ func main() {
 		templateCache: templateCache,
 	}
 
+	//Initialise tls.Config struct to hold non-default TLS settings we want the server to use.
+	tlsConfig := &tls.Config{
+		PreferServerCipherSuites:    true,
+		CurvePreferences:            []tls.CurveID{tls.X25519,
+													tls.CurveP256},
+	}
+
 	srv := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		Handler:  app.routes(),
+		Addr:     	*addr,
+		ErrorLog: 	errorLog,
+		Handler:  	app.routes(),
+		TLSConfig: 	tlsConfig,
 	}
 
 	infoLog.Printf("Starting Server on %s", *addr)
