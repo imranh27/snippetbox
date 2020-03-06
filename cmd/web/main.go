@@ -74,12 +74,13 @@ func main() {
 
 	infoLog.Printf("Starting Server on %s", *addr)
 
-	fmt.Println("http://localhost" + *addr)
-	fmt.Println("http://localhost" + *addr + "/snippet/1")
-	fmt.Println("http://localhost" + *addr + "/snippet/create")
-	fmt.Println("http://localhost" + *addr + "/static/")
+	fmt.Println("https://localhost" + *addr)
+	fmt.Println("https://localhost" + *addr + "/snippet/1")
+	fmt.Println("https://localhost" + *addr + "/snippet/create")
+	fmt.Println("https://localhost" + *addr + "/static/")
 
-	err = srv.ListenAndServe()
+	//For HTTPS we use ListenAndServeTLS passing in Certificate and Private key
+	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }
 
