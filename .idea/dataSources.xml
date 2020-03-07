@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="MySQL - @localhost" uuid="d9703dbb-8f58-4762-9d74-bc4e2216c465">
+    <data-source source="LOCAL" name="MySQL - root@localhost" uuid="d9703dbb-8f58-4762-9d74-bc4e2216c465">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
@@ -13,6 +13,12 @@
       <remarks>for snippetbox</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/snippetbox</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="@localhost" uuid="20c3a9a2-6bb8-440e-87e2-cace259ec9fd">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306</jdbc-url>
     </data-source>
   </component>
 </project>
