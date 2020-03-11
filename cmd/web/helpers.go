@@ -17,6 +17,9 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	//Add flash message if one exists.
 	td.Flash = app.session.PopString(r, "flash")
 
+	//Add authentication status to the template data.
+	td.IsAuthenticated = app.isAuthenticated(r)
+
 	return td
 }
 
@@ -54,4 +57,9 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	}
 	//write the buffer to the response writer
 	buf.WriteTo(w)
+}
+
+//Return true if current request is from an authenticated user.
+func (app *application) isAuthenticated(r *http.Request) bool {
+	return app.session.Exists(r, "authenticatedUserID")
 }

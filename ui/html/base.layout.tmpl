@@ -4,7 +4,7 @@
 <html lang='en'>
     <head>
         <meta charset='utf-8'>
-        <title>{{template "title" .}} - Snippetbox</title>
+        <title>{{template "title" .}} - Snippet-box</title>
         <link rel='stylesheet' href='/static/css/main.css'>
         <link rel='shortcut icon' href='/static/img/favicon.ico' type='image/x-icon'>
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700'>
@@ -16,14 +16,19 @@
         <nav>
             <div>
                 <a href='/'>Home</a>
-                <a href='/snippet/create'>Create snippet</a>
+                {{if .IsAuthenticated}}
+                    <a href='/snippet/create'>Create snippet</a>
+                {{end}}
             </div>
             <div>
-                <a href='/user/signup'>Signup</a>
-                <a href='/user/login'>Login</a>
-                <form action='/user/logout' method='POST'>
-                    <button>Logout</button>
-                </form>
+                {{if .IsAuthenticated}}
+                    <form action='/user/logout' method='POST'>
+                        <button>Logout</button>
+                    </form>
+                 {{else}}
+                    <a href='/user/signup'>Signup</a>
+                    <a href='/user/login'>Login</a>
+                 {{end}}
             </div>
         </nav>
         <main>
