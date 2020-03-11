@@ -18,12 +18,12 @@ import (
 
 //to make this globally available. Functions are then created as methods against this.
 type application struct {
-	errorLog      	*log.Logger
-	infoLog       	*log.Logger
-	session       	*sessions.Session
-	snippets      	*mysql.SnippetModel
-	templateCache 	map[string]*template.Template
-	users 			*mysql.UserModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	session       *sessions.Session
+	snippets      *mysql.SnippetModel
+	templateCache map[string]*template.Template
+	users         *mysql.UserModel
 }
 
 func main() {
@@ -53,6 +53,8 @@ func main() {
 	//Initialise new session manager, session expires after 12 hours
 	session := sessions.New([]byte(*secret))
 	session.Lifetime = 12 * time.Hour
+	session.Secure = true
+	session.SameSite = http.SameSiteStrictMode
 
 	//initialise new template cache 216
 	templateCache, err := newTemplateCache("./ui/html/")
@@ -61,29 +63,29 @@ func main() {
 	}
 
 	app := &application{
-		errorLog:      	errorLog,
-		infoLog:       	infoLog,
-		session:       	session,
-		snippets:      	&mysql.SnippetModel{DB: db},
-		templateCache: 	templateCache,
-		users: 			&mysql.UserModel{DB: db},
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		session:       session,
+		snippets:      &mysql.SnippetModel{DB: db},
+		templateCache: templateCache,
+		users:         &mysql.UserModel{DB: db},
 	}
 
 	//Initialise tls.Config struct to hold non-default TLS settings we want the server to use.
 	tlsConfig := &tls.Config{
-		PreferServerCipherSuites:    true,
-		CurvePreferences:            []tls.CurveID{tls.X25519,
-													tls.CurveP256},
+		PreferServerCipherSuites: true,
+		CurvePreferences: []tls.CurveID{tls.X25519,
+			tls.CurveP256},
 	}
 
 	srv := &http.Server{
-		Addr:     		*addr,
-		ErrorLog: 		errorLog,
-		Handler:  		app.routes(),
-		TLSConfig: 		tlsConfig,
-		IdleTimeout: 	time.Minute,
-		ReadTimeout:	5 * time.Second,
-		WriteTimeout: 	10 * time.Second,
+		Addr:         *addr,
+		ErrorLog:     errorLog,
+		Handler:      app.routes(),
+		TLSConfig:    tlsConfig,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	infoLog.Printf("Starting Server on %s", *addr)

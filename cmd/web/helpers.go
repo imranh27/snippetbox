@@ -6,12 +6,17 @@ import (
 	"net/http"
 	"runtime/debug"
 	"time"
+	"github.com/justinas/nosurf"
 )
 
 func (app *application) addDefaultData(td *templateData, r *http.Request) *templateData {
 	if td == nil {
 		td = &templateData{}
 	}
+
+	//Add CSRF Token to the templateData struct
+	td.CSRFToken = nosurf.Token(r)
+
 	td.CurrentYear = time.Now().Year()
 
 	//Add flash message if one exists.

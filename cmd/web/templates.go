@@ -10,12 +10,13 @@ import (
 
 //define a templateData type to act as the holding structure for any holding data to pass to our HTML templates.
 type templateData struct {
-	CurrentYear 	int
-	Flash      		string
-	Form        	*forms.Form
-	IsAuthenticated	bool
-	Snippet     	*models.Snippet
-	Snippets    	[]*models.Snippet
+	CSRFToken       string
+	CurrentYear     int
+	Flash           string
+	Form            *forms.Form
+	IsAuthenticated bool
+	Snippet         *models.Snippet
+	Snippets        []*models.Snippet
 }
 
 //Create humanDate function
