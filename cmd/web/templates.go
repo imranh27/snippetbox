@@ -21,7 +21,13 @@ type templateData struct {
 
 //Create humanDate function
 func humanDate(t time.Time) string {
-	return t.Format("02 Jan 2006 @ 15:04")
+	//Return empty string if zero value
+	if t.IsZero() {
+		return ""
+	}
+
+	//Convert to UTC before format
+	return t.UTC().Format("02 Jan 2006 @ 15:04")
 }
 
 //Initialise a template.FuncMap object and store in a global variable.
