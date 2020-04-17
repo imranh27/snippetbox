@@ -1,0 +1,62 @@
+
+package main
+
+import (
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/http/cookiejar"
+	"net/http/httptest"
+	"testing"
+)
+
+//New test application helper
+func newTestApplication(t *testing.T) *application {
+	return &application{
+		errorLog: 	log.New(ioutil.Discard, "", 0),
+		infoLog: 	log.New(ioutil.Discard, "", 0),
+	}
+}
+
+//Custom testServer type
+type testServer struct {
+	*httptest.Server
+}
+
+//New Test server helper
+func newTestServer(t *testing.T, h http.Handler) *testServer {
+	ts := httptest.NewTLSServer(h)
+
+	//Initialise new cookie jar
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//add cookie jar to client
+	ts.Client().Jar = jar
+
+	//Disable redirect
+	ts.Client().CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	}
+
+	return &testServer{ts}
+}
+
+//Add GET method to test server
+func (ts *testServer) get(t *testing.T, urlPath string) (int, http.Header, []byte) {
+	rs, err := ts.Client().Get(ts.URL + urlPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer rs.Body.Close()
+	body, err := ioutil.ReadAll(rs.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return rs.StatusCode, rs.Header, body
+}
+
