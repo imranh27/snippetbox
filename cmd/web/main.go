@@ -8,6 +8,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golangcollege/sessions"
+	"github.com/imranh27/snippetbox/pkg/models"
 	"github.com/imranh27/snippetbox/pkg/models/mysql"
 	"html/template"
 	"log"
@@ -16,19 +17,27 @@ import (
 	"time"
 )
 
-//to make this globally available. Functions are then created as methods against this.
-type application struct {
-	errorLog      *log.Logger
-	infoLog       *log.Logger
-	session       *sessions.Session
-	snippets      *mysql.SnippetModel
-	templateCache map[string]*template.Template
-	users         *mysql.UserModel
-}
-
 type contextKey string
 
 const contextKeyIsAuthenticated = contextKey("isAuthenticated")
+
+//to make this globally available. Functions are then created as methods against this.
+type application struct {
+	errorLog *log.Logger
+	infoLog  *log.Logger
+	session  *sessions.Session
+	snippets interface {
+		Insert(string, string, string) (int, error)
+		Get(int) (*models.Snippet, error)
+		Latest() ([]*models.Snippet, error)
+	}
+	templateCache map[string]*template.Template
+	users interface {
+		Insert(string, string, string) error
+		Authenticate(string, string) (int, error)
+		Get(int) (*models.User, error)
+	}
+}
 
 func main() {
 

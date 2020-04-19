@@ -1,4 +1,3 @@
-
 //Created Chapter 8.4
 package forms
 
@@ -18,5 +17,3 @@ func (e errors) Get(field string) string {
 	}
 	return es[0]
 }
-
-

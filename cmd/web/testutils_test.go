@@ -1,20 +1,37 @@
-
 package main
 
 import (
+	"github.com/golangcollege/sessions"
+	"github.com/imranh27/snippetbox/pkg/models/mock"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 //New test application helper
 func newTestApplication(t *testing.T) *application {
+	//Create new template cache
+	templateCache, err := newTemplateCache("./../../ui/html")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//create new session manager instance
+	session := sessions.New([]byte("s6Ndh+pPbnzHbS*+9Pk8qGWhTzb-pa@ge"))
+	session.Lifetime = 12 * time.Hour
+	session.Secure = true
+
 	return &application{
-		errorLog: 	log.New(ioutil.Discard, "", 0),
-		infoLog: 	log.New(ioutil.Discard, "", 0),
+		errorLog:      log.New(ioutil.Discard, "", 0),
+		infoLog:       log.New(ioutil.Discard, "", 0),
+		session:       session,
+		snippets:      &mock.SnippetModel{},
+		templateCache: templateCache,
+		users:         &mock.UserModel{},
 	}
 }
 
@@ -59,4 +76,3 @@ func (ts *testServer) get(t *testing.T, urlPath string) (int, http.Header, []byt
 
 	return rs.StatusCode, rs.Header, body
 }
-

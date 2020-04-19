@@ -3,8 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/imranh27/snippetbox/pkg/models"
 	"github.com/imranh27/snippetbox/pkg/forms"
+	"github.com/imranh27/snippetbox/pkg/models"
 	"net/http"
 	"strconv"
 )
@@ -39,7 +39,7 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, r, "show.page.tmpl", &templateData{Snippet: s,})
+	app.render(w, r, "show.page.tmpl", &templateData{Snippet: s})
 }
 
 //Add new Create new SnippetFormHandler
@@ -85,7 +85,7 @@ func (app *application) signUpUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", &templateData{Form: forms.New(nil)})
 }
 
-func (app *application) signupUser (w http.ResponseWriter, r *http.Request) {
+func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	//parse for data
 	err := r.ParseForm()
 	if err != nil {
@@ -126,7 +126,7 @@ func (app *application) signupUser (w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login.page.tmpl", &templateData{Form:forms.New(nil),})
+	app.render(w, r, "login.page.tmpl", &templateData{Form: forms.New(nil)})
 }
 
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
@@ -168,4 +168,3 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK"))
 }
-

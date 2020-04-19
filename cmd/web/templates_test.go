@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -9,9 +8,9 @@ import (
 func TestHumanDate(t *testing.T) {
 	//create test cases struct
 	tests := []struct {
-		name 	string
-		tm 		time.Time
-		want	string
+		name string
+		tm   time.Time
+		want string
 	}{
 		{
 			name: "UTC",
@@ -31,7 +30,7 @@ func TestHumanDate(t *testing.T) {
 	}
 	//Loop through tests
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T){
+		t.Run(tt.name, func(t *testing.T) {
 			hd := humanDate(tt.tm)
 
 			if hd != tt.want {
